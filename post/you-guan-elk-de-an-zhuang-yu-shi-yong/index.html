@@ -1,0 +1,585 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title># 有关ELK的安装与使用 -
+    Gagumi&#39;s blog</title>
+<link rel="shortcut icon" href="https://gagumi.github.io/favicon.ico" />
+<link
+  href="https://fastly.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css"
+  rel="stylesheet" />
+<link
+  rel="stylesheet"
+  href="https://fastly.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css" />
+<link
+  rel="stylesheet"
+  href="https://gagumi.github.io/media/css/tailwind.css" />
+<link rel="stylesheet" href="https://gagumi.github.io/styles/main.css" />
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  title="# 有关ELK的安装与使用 -
+    Gagumi&#39;s blog - Atom Feed"
+  href="https://gagumi.github.io/atom.xml" />
+
+
+
+    <meta name="description" content="ELK 是一个开源软件堆栈，由三个核心组件组成：Elasticsearch、Logstash 和 Kibana。每个组件都具有不同的功能，共同构建了一个强大的日志管理和分析平台。
+
+
+  对不起，你的浏览器不支持 audio 元素。
+
+
+学..." />
+    <meta
+      property="og:title"
+      content="# 有关ELK的安装与使用 - Gagumi&#39;s blog" />
+    <meta property="og:description" content="ELK 是一个开源软件堆栈，由三个核心组件组成：Elasticsearch、Logstash 和 Kibana。每个组件都具有不同的功能，共同构建了一个强大的日志管理和分析平台。
+
+
+  对不起，你的浏览器不支持 audio 元素。
+
+
+学..." />
+    <meta property="og:type" content="articles" />
+    <meta property="og:url" content="https://gagumi.github.io/post/you-guan-elk-de-an-zhuang-yu-shi-yong/" />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516224707.png" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content="1200" />
+    <meta
+      name="twitter:title"
+      content="# 有关ELK的安装与使用 - Gagumi&#39;s blog" />
+    <meta name="twitter:description" content="ELK 是一个开源软件堆栈，由三个核心组件组成：Elasticsearch、Logstash 和 Kibana。每个组件都具有不同的功能，共同构建了一个强大的日志管理和分析平台。
+
+
+  对不起，你的浏览器不支持 audio 元素。
+
+
+学..." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://gagumi.github.io/post/you-guan-elk-de-an-zhuang-yu-shi-yong/" />
+
+    <link
+      rel="stylesheet"
+      href="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" />
+    <link
+      rel="stylesheet"
+      href="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" />
+
+    
+    <link
+      rel="stylesheet"
+      href="https://gagumi.github.io/media/css/prism-synthwave84.css" />
+     
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" />
+    
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/Xalaok/Fonts@main/LXGWWenKaiLite/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/Xalaok/Fonts@main/LXGWWenKaiLite/bold.woff2" as="font" type="font/woff2" crossorigin>
+  </head>
+
+  <body>
+    <div class="antialiased flex flex-col min-h-screen" id="app">
+      <a
+        href="https://gagumi.github.io"
+        class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+        Gagumi&#39;s blog
+      </a>
+      <div class="max-w-4xl w-full mx-auto">
+        <div
+          class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+          <h1
+            class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+            # 有关ELK的安装与使用
+          </h1>
+          
+          <img
+            src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516224707.png"
+            alt="# 有关ELK的安装与使用"
+            class="block w-full mb-8" />
+          
+          <div class="mb-8 flex flex-wrap">
+            <div class="text-gray-400 text-sm mr-4">
+              2023-05-14 · 8 min read
+            </div>
+            
+            <a
+              href="https://gagumi.github.io/tag/69Q4bli3R/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Elasticsearch
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/8jwhoDaNh/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Logstash
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/MnRlqQX3-/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Kibana
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/oFLQRYHIn/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              python
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/-iTzgZm-A/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              博客
+            </a>
+            
+          </div>
+          <div class="markdown mb-8" v-pre><p style="font-size:20px;">ELK 是一个开源软件堆栈，由三个核心组件组成：Elasticsearch、Logstash 和 Kibana。每个组件都具有不同的功能，共同构建了一个强大的日志管理和分析平台。
+</p>
+<audio controls src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/audio/HOYO-MiX%20_%20Anthony%20Lynch%20-%20%E8%B8%8F%E4%B8%8A%E6%97%85%E9%80%94%20Take%20the%20Journey.flac" type="audio/flac" volume="0.3" loop>
+  对不起，你的浏览器不支持 audio 元素。
+</audio>
+<!-- more -->
+<p>学校提供了四个月的使用资格，但是显示只显示14天。</p>
+<p>以下是每个组件的简要介绍：</p>
+<p>Elasticsearch：Elasticsearch 是一个实时分布式搜索和分析引擎，用于存储、搜索和分析大规模数据。它被设计用于高可扩展性和容错性，可以处理海量数据，并提供强大的全文搜索、复杂查询、聚合和分析能力。</p>
+<p>Logstash：Logstash 是一个用于数据收集、处理和传输的开源工具。它可以从各种来源（如日志文件、数据库、消息队列等）收集数据，并将其进行转换、标准化和过滤，然后发送到不同的目标，其中包括 Elasticsearch。</p>
+<p>Kibana：Kibana 是一个用于数据可视化和分析的开源工具。它提供了直观的用户界面，让用户能够通过交互式图表、仪表盘、地图等方式来探索和可视化 Elasticsearch 中的数据。Kibana 提供了丰富的可视化功能，使用户能够以直观的方式理解和分析数据。</p>
+<p>这三个组件共同协作，构建了一个强大的日志管理和分析平台。Logstash 用于收集和处理数据，Elasticsearch 用于存储和索引数据，而 Kibana 则提供了交互式的数据可视化和分析界面。</p>
+<p>ELK 被广泛应用于日志管理、实时监控、数据分析和业务智能等领域。它能够处理和分析各种类型的数据，包括日志数据、指标数据、文本数据等，帮助用户发现潜在的问题、获得实时见解，并支持数据驱动的决策和运营优化。</p>
+<p>除了核心组件之外，ELK 生态系统还包括其他工具和插件，用于扩展和增强功能。例如，Beats 用于轻量级数据收集，Elastic APM 用于应用性能监控，Elasticsearch SQL 用于执行 SQL 查询等。</p>
+<p>总而言之，ELK 提供了一个强大的平台，用于集中存储、搜索、分析和可视化各种类型的数据。它的灵活性和可扩展性使其成为处理大规模数据和解决实时分析挑战的理想选择。</p>
+<h3 id="登录信息">登录信息</h3>
+<p>在启动一个项目（test-lesson）之后，能获得账号密码</p>
+<p>username,password<br>
+elastic,gUhQRAqAalsPgBFXVxzGwkCV</p>
+<h3 id="home-page">Home page</h3>
+<p><a href="https://test-lesson-93537f.kb.us-central1.gcp.cloud.es.io:9243/app/integrations/browse">Browse integrations - Integrations - Elastic (es.io)</a></p>
+<p>端口是9243</p>
+<p>https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243</p>
+<h3 id="注册-with-ubuntu">注册 with ubuntu</h3>
+<pre><code class="language-ubuntu">curl --version
+</code></pre>
+<pre><code class="language-ubuntu">curl -X GET -u elastic:gUhQRAqAalsPgBFXVxzGwkCV 'https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243/_cat/indices?v'
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516171051.png" alt="" loading="lazy"></figure>
+<h3 id="创建一个index">创建一个index</h3>
+<pre><code>curl -X PUT 'https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243/customer?pretty'
+</code></pre>
+<p>不会成功，需要添加身份验证（总是需要吗？）</p>
+<pre><code class="language-ubuntu">curl -X PUT -u elastic:gUhQRAqAalsPgBFXVxzGwkCV 'https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243/customer?pretty'
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516171857.png" alt="" loading="lazy"></figure>
+<pre><code class="language-ubuntu">curl -X GET -u elastic:gUhQRAqAalsPgBFXVxzGwkCV 'https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243/_cat/indices?v'
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516172240.png" alt="" loading="lazy"></figure>
+<p>可以看到已经多了一个customer</p>
+<pre><code>curl -X PUT -u elastic:gUhQRAqAalsPgBFXVxzGwkCV 'https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243/customer/_doc/1?pretty' -H 'Content-Type:application/json' -d '{\&quot;firstname\&quot;:\&quot;John\&quot;, \&quot;lastname\&quot;:\&quot;Doe\&quot;, \&quot;age\&quot;:22}' 
+</code></pre>
+<p>🤡，不需要转义字符捏</p>
+<pre><code class="language-ubuntu">curl -X PUT -u elastic:gUhQRAqAalsPgBFXVxzGwkCV 'https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243/customer/_doc/1?pretty' -H 'Content-Type:application/json' -d '{&quot;firstname&quot;:&quot;John&quot;, &quot;lastname&quot;:&quot;Doe&quot;, &quot;age&quot;:22}'
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516173535.png" alt="" loading="lazy"></figure>
+<pre><code class="language-ubuntu">curl -X PUT -u elastic:gUhQRAqAalsPgBFXVxzGwkCV 'https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243/customer/_doc/2?pretty' -H 'Content-Type:application/json' -d '{&quot;firstname&quot;:&quot;Anna&quot;, &quot;lastname&quot;:&quot;Conda&quot;, &quot;age&quot;:37}'
+</code></pre>
+<pre><code class="language-ubuntu">curl -X PUT -u elastic:gUhQRAqAalsPgBFXVxzGwkCV 'https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243/customer/_doc/3?pretty' -H 'Content-Type:application/json' -d '{&quot;firstname&quot;:&quot;Bob&quot;, &quot;lastname&quot;:&quot;Dylan&quot;, &quot;age&quot;:37}'
+</code></pre>
+<p>接下来使用query语句小检查一手</p>
+<pre><code class="language-ubuntu">curl -X GET -u elastic:gUhQRAqAalsPgBFXVxzGwkCV 'https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243/customer/_doc/1?pretty'
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516174431.png" alt="" loading="lazy"></figure>
+<p>或者使用云上（或是本地的）web界面的Dev  Tools 发送命令：</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516174913.png" alt="" loading="lazy"></figure>
+<h3 id="可视化-in-kibana">可视化 in kibana</h3>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516180803.png" alt="" loading="lazy"></figure>
+<p>创建一个名为“customer”的index pattern，在创建输入名字的时候，会自动匹配已有的资源。</p>
+<p>实现四个filer(DSL query)</p>
+<ul>
+<li>
+<p>firstname : Anna</p>
+<pre><code class="language-sql">{
+  &quot;query&quot;: {
+    &quot;match&quot;: {
+      &quot;firstname&quot;: &quot;Anna&quot;
+    }
+  }
+}
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516183355.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>firstname : *n(找到任何以n结尾的)</p>
+<pre><code class="language-sql">{
+  &quot;wildcard&quot;: {
+    &quot;firstname&quot;: &quot;*n&quot;
+  }
+}
+</code></pre>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516183507.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>firstname : *n*</p>
+<pre><code class="language-sql">{
+  &quot;wildcard&quot;: {
+    &quot;firstname&quot;: &quot;*n*&quot;
+  }
+}
+</code></pre>
+<figure data-type="image" tabindex="10"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/image-20230516183852518.png" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>age &gt; 23</p>
+</li>
+</ul>
+<pre><code class="language-sql">{
+  &quot;query&quot;: {
+    &quot;range&quot;: {
+      &quot;age&quot;: {
+        &quot;gt&quot;: 23
+      }
+    }
+  }
+}
+</code></pre>
+<figure data-type="image" tabindex="11"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516184127.png" alt="" loading="lazy"></figure>
+<p>除了 <code>gt</code>，Elasticsearch 的 range 查询还支持以下操作符：</p>
+<ul>
+<li><code>lt</code>：小于（less than）</li>
+<li><code>gte</code>：大于或等于（greater than or equal to）</li>
+<li><code>lte</code>：小于或等于（less than or equal to）</li>
+</ul>
+<h3 id="柱状图可视化age和count">柱状图可视化（age和count）</h3>
+<figure data-type="image" tabindex="12"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516210732.png" alt="" loading="lazy"></figure>
+<p>save as “customer per age” 并在dashboard上展示。</p>
+<figure data-type="image" tabindex="13"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516211109.png" alt="" loading="lazy"></figure>
+<h3 id="python-elastic">Python &amp; Elastic</h3>
+<p>使用pip安装：</p>
+<pre><code class="language-cmd">pip install elasticsearch
+</code></pre>
+<p>以kaggle数据集为例子进行试验：（https://www.kaggle.com/datasets/datasnaek/chess）</p>
+<pre><code class="language-python">from datetime import datetime
+import os
+from elasticsearch import Elasticsearch,helpers
+
+password = os.environ[&quot;ENV_PASSWORD&quot;]
+client = Elasticsearch(hosts=[&quot;https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243&quot;],basic_auth=('elastic',password))  
+docs = []
+docs.append({&quot;name&quot;:&quot;Bob&quot;,&quot;timestamp&quot;:datetime.utcnow().isoformat()})
+
+helpers.bulk(client,docs,index=&quot;index_fo_python_test&quot;)
+</code></pre>
+<p>一开始直接给<code>os.environ[&quot;ENV_PASSWORD&quot;]</code>里输入了我的密码，但这是不正确的，会报错key error，<code>password = os.environ[]</code> 这行代码的作用是从环境变量中获取一个值，并将其赋给变量 <code>password</code>。</p>
+<p>在操作系统中，环境变量是一些全局的值，用于存储配置信息、认证凭据、路径等。通过使用 <code>os.environ</code>，你可以在 Python 脚本中访问这些环境变量。</p>
+<p>具体来说，<code>os.environ</code> 是一个字典对象，它包含了当前系统环境中所有已定义的环境变量。你可以使用环境变量来存储敏感信息（如密码、API 密钥等），而不需要直接在代码中硬编码这些敏感信息。</p>
+<p>所以需要在环境中设置其值：</p>
+<pre><code class="language-cmd">set ENV_PASSWORD=gUhQRAqAalsPgBFXVxzGwkCV
+</code></pre>
+<p>再次运行python文件，通过，接下来去进行可视化</p>
+<p>去往Stack Management页面，查看并创建一个data views，严格按照python代码里面的信息创建：</p>
+<figure data-type="image" tabindex="14"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516214519.png" alt="" loading="lazy"></figure>
+<p>回到discover，并选择index_fo_python_test</p>
+<figure data-type="image" tabindex="15"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516214844.png" alt="" loading="lazy"></figure>
+<h3 id="使用python进行实时发送">使用python进行实时发送</h3>
+<p>我使用了以下的代码进行实时发送：</p>
+<pre><code class="language-python">import datetime
+import random
+import time
+import os
+from elasticsearch import Elasticsearch, helpers
+
+# 连接 Elasticsearch
+password = os.environ[&quot;ENV_PASSWORD&quot;]
+es = Elasticsearch(hosts=[&quot;https://test-lesson-93537f.es.us-central1.gcp.cloud.es.io:9243&quot;],basic_auth=('elastic',password))  
+# 定义发送数据的函数
+def send_data():
+    # 生成随机数据
+    data = {
+        &quot;timestamp&quot;: datetime.datetime.utcnow(),
+        &quot;value&quot;: random.randint(1, 100)
+    }
+
+    # 构建索引操作
+    action = {
+        &quot;_index&quot;: &quot;index_for_realtime_by_python&quot;,
+        &quot;_source&quot;: data
+    }
+
+    # 批量索引数据
+    helpers.bulk(es, [action])
+
+# 发送数据并观察仪表盘变化
+while True:
+    # 发送数据到 Elasticsearch
+    send_data()
+
+    # 暂停5秒
+    time.sleep(5)
+
+</code></pre>
+<p>在平台上进行可视化设置（别忘了新建一个dataview，同上）</p>
+<figure data-type="image" tabindex="16"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516221022.png" alt="" loading="lazy"></figure>
+<p>在dashboard上看起来这个图像是死的，你需要手动刷新。这时去到discover页面：右上角设置refresh every 1s（或是更短），此时图表就实时动起来力！</p>
+<figure data-type="image" tabindex="17"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230516222304.png" alt="" loading="lazy"></figure>
+</div>
+          <!-- Share to Twitter, Weibo, Telegram -->
+          <div class="flex items-center">
+            <div class="mr-4 flex items-center">
+              <i class="ri-share-forward-line text-gray-500"></i>
+            </div>
+            <div
+              class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex"
+              @click="shareToTwitter">
+              <i class="ri-twitter-line"></i>
+            </div>
+            <div
+              class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex"
+              @click="shareToWeibo">
+              <i class="ri-weibo-line"></i>
+            </div>
+            <div
+              class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex"
+              @click="shareToTelegram">
+              <i class="ri-telegram-line"></i>
+            </div>
+          </div>
+        </div>
+
+         
+        <div id="vlaine-comment"></div>
+         <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+</footer>
+
+      </div>
+
+      <!-- TOC Container -->
+      <div
+        class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight"
+        @click="showToc = true">
+        <i class="ri-file-list-line"></i>
+      </div>
+
+      <div
+        class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast"
+        :class="{ '-mr-64': !showToc }">
+        <div class="flex mb-4 justify-end">
+          <div
+            class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast"
+            @click="showToc = false">
+            <i class="ri-close-line text-lg"></i>
+          </div>
+        </div>
+        <div class="post-toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E7%99%BB%E5%BD%95%E4%BF%A1%E6%81%AF">登录信息</a></li>
+<li><a href="#home-page">Home page</a></li>
+<li><a href="#%E6%B3%A8%E5%86%8C-with-ubuntu">注册 with ubuntu</a></li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAindex">创建一个index</a></li>
+<li><a href="#%E5%8F%AF%E8%A7%86%E5%8C%96-in-kibana">可视化 in kibana</a></li>
+<li><a href="#%E6%9F%B1%E7%8A%B6%E5%9B%BE%E5%8F%AF%E8%A7%86%E5%8C%96age%E5%92%8Ccount">柱状图可视化（age和count）</a></li>
+<li><a href="#python-elastic">Python &amp; Elastic</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8python%E8%BF%9B%E8%A1%8C%E5%AE%9E%E6%97%B6%E5%8F%91%E9%80%81">使用python进行实时发送</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+      </div>
+
+      <!-- Back to top -->
+      <div
+        class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200"
+        @click="backToUp"
+        v-show="scrolled">
+        <i class="ri-arrow-up-line"></i>
+      </div>
+    </div>
+
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe.
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg"></div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter"></div>
+        <button
+          class="pswp__button pswp__button--close"
+          title="Close (Esc)"></button>
+        <button
+          class="pswp__button pswp__button--fs"
+          title="Toggle fullscreen"></button>
+        <button
+          class="pswp__button pswp__button--zoom"
+          title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip"></div>
+      </div>
+      <button
+        class="pswp__button pswp__button--arrow--left"
+        title="Previous (arrow left)"></button>
+      <button
+        class="pswp__button pswp__button--arrow--right"
+        title="Next (arrow right)"></button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script src="https://fastly.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://gagumi.github.io/media/scripts/main.js"></script>
+
+    <!-- Code Highlight -->
+    
+    <script src="https://gagumi.github.io/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+    
+
+    <script src="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+    <script>
+      //拿到预览框架，也就是上面的html代码
+      var pswpElement = document.querySelectorAll('.pswp')[0]
+      //定义图片数组变量
+      var imgitems
+      /**
+       * 用于显示预览界面
+       * @param index 图片数组下标
+       */
+      function viewImg(index) {
+        //其它选项这里不做过多阐述，详情见官网
+        var pswpoptions = {
+          index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+          bgOpacity: 0.7, // 背景透明度，0-1
+          maxSpreadZoom: 3, // 缩放级别，不要太大
+        }
+        //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+        var gallery = new PhotoSwipe(
+          pswpElement,
+          PhotoSwipeUI_Default,
+          imgitems,
+          pswpoptions
+        )
+        gallery.init()
+      }
+      /**
+       * 用于添加图片点击事件
+       * @param img 图片元素
+       * @param index 所属下标（在imgitems中的位置）
+       */
+      function addImgClick(img, index) {
+        img.onclick = function () {
+          viewImg(index)
+        }
+      }
+      /**
+       * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+       * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+       * 异步加载图片可在图片元素创建完成后调用此方法
+       */
+      function initImg() {
+        //重置图片数组
+        imgitems = []
+        //查找class:markdown 下的所有img元素并遍历
+        var imgs = document.querySelectorAll('.markdown img')
+        for (var i = 0; i < imgs.length; i++) {
+          var img = imgs[i]
+          //本站相册初始为loading图片，真实图片放在data-src
+          var ds = img.getAttribute('data-src')
+          //创建image对象，用于获取图片宽高
+          var imgtemp = new Image()
+          //判断是否存在data-src
+          if (ds != null && ds.length > 0) {
+            imgtemp.src = ds
+          } else {
+            imgtemp.src = img.src
+          }
+          //判断是否存在缓存
+          if (imgtemp.complete) {
+            var imgobj = {
+              src: imgtemp.src,
+              w: imgtemp.width,
+              h: imgtemp.height,
+            }
+            imgitems[i] = imgobj
+            addImgClick(img, i)
+          } else {
+            console.log('进来了2')
+            imgtemp.index = i
+            imgtemp.img = img
+            imgtemp.onload = function () {
+              var imgobj = {
+                src: this.src,
+                w: this.width,
+                h: this.height,
+              }
+              //不要使用push，因为onload前后顺序会不同
+              imgitems[this.index] = imgobj
+              //添加点击事件
+              addImgClick(this.img, this.index)
+            }
+          }
+        }
+      }
+      //初始化
+      initImg()
+    </script>
+     <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'AxKJfVBXhXXWlO1ABZHQtcDx-MdYXbMMI',
+    appKey: 'BMP1hITDOIUE3osQxLR6EWXC',
+    pageSize: '10',
+    notify: 'true',
+    avatar: 'mp',
+    verify: 'true',
+    placeholder: '来都来了，不妨评论一下',
+    visitor: 'true',
+    highlight: 'true',
+    recordIP: 'true',
+  })
+</script>
+  
+  </body>
+</html>

@@ -1,0 +1,952 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>有关动漫网站舆情分析Datalake的实现 -
+    Gagumi&#39;s blog</title>
+<link rel="shortcut icon" href="https://gagumi.github.io/favicon.ico" />
+<link
+  href="https://fastly.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css"
+  rel="stylesheet" />
+<link
+  rel="stylesheet"
+  href="https://fastly.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css" />
+<link
+  rel="stylesheet"
+  href="https://gagumi.github.io/media/css/tailwind.css" />
+<link rel="stylesheet" href="https://gagumi.github.io/styles/main.css" />
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  title="有关动漫网站舆情分析Datalake的实现 -
+    Gagumi&#39;s blog - Atom Feed"
+  href="https://gagumi.github.io/atom.xml" />
+
+
+
+    <meta name="description" content="之前的博客已经对API有了充分的了解，由于其局限性，除了手动爬取下来的06-23年动画的评论数据以外。本篇所有的实现都是基于实时top50动漫的类型分析和评论分析。
+
+
+  对不起，你的浏览器不支持 audio 元素。
+
+
+训练数据的预处理..." />
+    <meta
+      property="og:title"
+      content="有关动漫网站舆情分析Datalake的实现 - Gagumi&#39;s blog" />
+    <meta property="og:description" content="之前的博客已经对API有了充分的了解，由于其局限性，除了手动爬取下来的06-23年动画的评论数据以外。本篇所有的实现都是基于实时top50动漫的类型分析和评论分析。
+
+
+  对不起，你的浏览器不支持 audio 元素。
+
+
+训练数据的预处理..." />
+    <meta property="og:type" content="articles" />
+    <meta property="og:url" content="https://gagumi.github.io/post/you-guan-dong-man-wang-zhan-yu-qing-fen-xi-datalake-de-shi-xian/" />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230523091315.png" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content="1200" />
+    <meta
+      name="twitter:title"
+      content="有关动漫网站舆情分析Datalake的实现 - Gagumi&#39;s blog" />
+    <meta name="twitter:description" content="之前的博客已经对API有了充分的了解，由于其局限性，除了手动爬取下来的06-23年动画的评论数据以外。本篇所有的实现都是基于实时top50动漫的类型分析和评论分析。
+
+
+  对不起，你的浏览器不支持 audio 元素。
+
+
+训练数据的预处理..." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://gagumi.github.io/post/you-guan-dong-man-wang-zhan-yu-qing-fen-xi-datalake-de-shi-xian/" />
+
+    <link
+      rel="stylesheet"
+      href="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" />
+    <link
+      rel="stylesheet"
+      href="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" />
+
+    
+    <link
+      rel="stylesheet"
+      href="https://gagumi.github.io/media/css/prism-synthwave84.css" />
+     
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" />
+    
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/Xalaok/Fonts@main/LXGWWenKaiLite/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/Xalaok/Fonts@main/LXGWWenKaiLite/bold.woff2" as="font" type="font/woff2" crossorigin>
+  </head>
+
+  <body>
+    <div class="antialiased flex flex-col min-h-screen" id="app">
+      <a
+        href="https://gagumi.github.io"
+        class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+        Gagumi&#39;s blog
+      </a>
+      <div class="max-w-4xl w-full mx-auto">
+        <div
+          class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+          <h1
+            class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+            有关动漫网站舆情分析Datalake的实现
+          </h1>
+          
+          <img
+            src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230523091315.png"
+            alt="有关动漫网站舆情分析Datalake的实现"
+            class="block w-full mb-8" />
+          
+          <div class="mb-8 flex flex-wrap">
+            <div class="text-gray-400 text-sm mr-4">
+              2023-05-27 · 19 min read
+            </div>
+            
+            <a
+              href="https://gagumi.github.io/tag/TLASuK7cK/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              spark
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/Q1YOmyA1Z/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              airflow
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/I-ed-Ojuu/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              google cloud
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/Olio8TrjV/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              kafka
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/69Q4bli3R/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Elasticsearch
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/8jwhoDaNh/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Logstash
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/MnRlqQX3-/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              Kibana
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/oFLQRYHIn/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              python
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/-iTzgZm-A/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              博客
+            </a>
+            
+          </div>
+          <div class="markdown mb-8" v-pre><p style="font-size:20px;">之前的博客已经对API有了充分的了解，由于其局限性，除了手动爬取下来的06-23年动画的评论数据以外。本篇所有的实现都是基于实时top50动漫的类型分析和评论分析。
+</p>
+<audio controls src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/audio/HOYO-MiX%20_%20Anthony%20Lynch%20-%20%E8%B8%8F%E4%B8%8A%E6%97%85%E9%80%94%20Take%20the%20Journey.flac" type="audio/flac" volume="0.3" loop>
+  对不起，你的浏览器不支持 audio 元素。
+</audio>
+<!-- more -->
+<h3 id="训练数据的预处理与模型的训练">训练数据的预处理与模型的训练</h3>
+<p>前篇所获得的评论与标记数据，在这里的思路是进行机器学习分类器的训练。常见的方法有（支持向量机SVM，决策树，朴素贝叶斯等）其中支持向量机完成的是二分任务，鉴于本次模型需要分类出（recommend，not recommend和mixed filling）所以选择朴素贝叶斯或是决策树。由于朴素贝叶斯的结果过于离谱，这里选用决策树。</p>
+<p>预处理方面，这里的思路是使用NLTK官方的停用词和词形还原器。然后自定义一个文本清洗函数来去除特殊字符，标点符号和数字。</p>
+<p>特征表示方面，有三种常见的特征表示方法（词袋模型，TF-IDF，word2vec）。由于哥们对NLP确实不够了解，这里使用暴力的方法，使用三个特征表示都使用然后取最优的暴力方法。</p>
+<p>以下是训练代码：</p>
+<pre><code class="language-python">import re
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split, cross_val_score
+from gensim.models import Word2Vec
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+import joblib
+from tqdm import tqdm
+
+# 下载NLTK的停用词和词形还原器所需的数据
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+# 初始化词形还原器和停用词集合
+lemmatizer = WordNetLemmatizer()
+stopwords = list(stopwords.words('english'))
+
+
+# 自定义文本清洗函数
+def clean_text(text):
+    # 去除特殊字符、标点符号和数字
+    text = re.sub(r&quot;[^\w\s]&quot;, &quot;&quot;, text)
+    text = re.sub(r&quot;\d+&quot;, &quot;&quot;, text)
+    # 转换为小写
+    text = text.lower()
+    return text
+
+# 读取训练数据集
+df = pd.read_csv(&quot;standard_dataset.csv&quot;)
+
+# 清洗文本数据
+df[&quot;Comment&quot;] = df[&quot;Comment&quot;].apply(clean_text)
+
+# 划分训练集和测试集
+X = df[&quot;Comment&quot;]
+y = df[&quot;Recommendation&quot;]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 特征表示方法1: 词袋模型
+count_vectorizer = CountVectorizer(stop_words=stopwords)
+X_count = count_vectorizer.fit_transform(X)
+
+# 保存CountVectorizer
+count_vectorizer_filename = &quot;count_vectorizer.pkl&quot;
+joblib.dump(count_vectorizer, count_vectorizer_filename)
+print(f&quot;CountVectorizer saved as {count_vectorizer_filename}&quot;)
+
+# 特征表示方法2: TF-IDF
+tfidf_vectorizer = TfidfVectorizer(stop_words=stopwords)
+X_tfidf = tfidf_vectorizer.fit_transform(X)
+
+# 保存TfidfVectorizer
+tfidf_vectorizer_filename = &quot;tfidf_vectorizer.pkl&quot;
+joblib.dump(tfidf_vectorizer, tfidf_vectorizer_filename)
+print(f&quot;TfidfVectorizer saved as {tfidf_vectorizer_filename}&quot;)
+
+# 特征表示方法3: Word2Vec
+sentences = [nltk.word_tokenize(text) for text in X]
+word2vec_model = Word2Vec(sentences, size=100, window=5, min_count=1, workers=4)
+X_word2vec = [word2vec_model.wv[nltk.word_tokenize(text)].mean(axis=0) for text in X]
+
+# 保存Word2Vec模型
+word2vec_model_filename = &quot;word2vec_model.pkl&quot;
+word2vec_model.save(word2vec_model_filename)
+print(f&quot;Word2Vec model saved as {word2vec_model_filename}&quot;)
+
+# 构建决策树模型
+decision_tree = DecisionTreeClassifier()
+
+# 交叉验证比较不同特征表示方法的性能
+methods = [(&quot;CountVectorizer&quot;, X_count), (&quot;TF-IDF&quot;, X_tfidf), (&quot;Word2Vec&quot;, X_word2vec)]
+best_method = None
+best_score = 0.0
+
+for method_name, X_method in tqdm(methods):
+    scores = cross_val_score(decision_tree, X_method, y, cv=5)
+    avg_score = scores.mean()
+    print(f&quot;{method_name} - Average Score: {avg_score}&quot;)
+    
+    if avg_score &gt; best_score:
+        best_score = avg_score
+        best_method = method_name
+
+print(f&quot;\nBest Method: {best_method}&quot;)
+
+# 使用最优特征表示方法进行模型训练和测试
+if best_method == &quot;CountVectorizer&quot;:
+    X_train_best = count_vectorizer.transform(X_train)
+    X_test_best = count_vectorizer.transform(X_test)
+elif best_method == &quot;TF-IDF&quot;:
+    X_train_best = tfidf_vectorizer.transform(X_train)
+    X_test_best = tfidf_vectorizer.transform(X_test)
+elif best_method == &quot;Word2Vec&quot;:
+    X_train_best = [word2vec_model.wv[nltk.word_tokenize(text)].mean(axis=0) for text in X_train]
+    X_test_best = [word2vec_model.wv[nltk.word_tokenize(text)].mean(axis=0) for text in X_test]
+
+decision_tree.fit(X_train_best, y_train)
+y_pred = decision_tree.predict(X_test_best)
+
+# 输出模型评估参数
+classification_report = classification_report(y_test, y_pred)
+print(f&quot;\nClassification Report ({best_method}):&quot;)
+print(classification_report)
+
+# 保存决策树模型
+decision_tree_filename = &quot;decision_tree_model.pkl&quot;
+joblib.dump(decision_tree, decision_tree_filename)
+print(f&quot;Decision tree model saved as {decision_tree_filename}&quot;)
+</code></pre>
+<p>这里做出解释：为什么模型的训练这一步不也在spark上进行？</p>
+<p>因为使用的google dataproc spark平台，不知道为什么读取不了哥们在google储存桶里上传的训练集，另外由于使用的是试用的丐版，貌似cpu资源也不够训练一个决策树模型。故而决策树模型的训练在本地完成。</p>
+<p>完成训练之后准备工作完成，正式开始datalake的搭建。</p>
+<h3 id="思路总结">思路总结</h3>
+<p>通过airflow DAG控制三个任务：</p>
+<p>1.获取myanimelist排行前五十动漫的基本信息（最重要的是ID，类型），传入kafka的topic：'all_anime_tops'</p>
+<p>2.使用spark做数据处理（作为kafka 第一步topic的消费者），获得这些动漫的所有类型标签封装在json文件中，传入到kafka的topic：'all_anime_genres_counts'</p>
+<p>3.获取kitsu排行前五十动漫的评论信息（最重要的是ID和评论（评论始终取最新前五条））载入本地预训练好的决策树模型，获得这些评论的语义封装成json，传入到kafka的topic：'prediction_topics'</p>
+<p>4.elastic消费2 3 步的kafka topic，使用kibana做实时可视化。</p>
+<p>接下里开始实践。</p>
+<h3 id="平台的准备与注册">平台的准备与注册</h3>
+<p>本次项目所使用的所有工具（airflow，spark，kafka，elk）均是云端平台，使用API key进行连接。所有平台均有免费白嫖的说法。</p>
+<p>分别对应 google cloud的cloud composer（airflow），dataproc 集群（spark）；confluent cloud（kafka）；elk（Elasticsearch、Logstash 和 Kibana）</p>
+<p>平台的注册都比较简单，这里不多赘述。</p>
+<p>进入google平台后，记得新建一个项目。这里我的项目如下：</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528113408.png" alt="" loading="lazy"></figure>
+<h3 id="需要的api-key获取以及kafka-topic连接器的建立">需要的API key获取以及kafka topic，连接器的建立</h3>
+<p>登录网站https://confluent.cloud/login，注册获得试用资格。</p>
+<p>创建一个新的环境和cluster（一步一步跟着引导走即可）</p>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528120136.png" alt="" loading="lazy"></figure>
+<p>进入这个集群，点击左侧API key，右上角add一个新key，下载下来保存好。</p>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528120309.png" alt="" loading="lazy"></figure>
+<p>接下来点击topics，我们需要创建之前思路里提到的三个topic。</p>
+<p>建立之前，根据我们实验课所学，我们需要先建立elk相关物件。以消费这些topic做到可视化。</p>
+<p>建立集群之后，我们会被要求下载api key和密码，保存好。</p>
+<p>然后点击左侧：<br>
+<img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528120803.png" alt="" loading="lazy"></p>
+<p>进入deploment，在这里单击复制获得elk的链接（https://biganime.es.us-central1.gcp.cloud.es.io）</p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528120914.png" alt="" loading="lazy"></figure>
+<p>接下来回到kafka我们可以创建topic了</p>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528121519.png" alt="" loading="lazy"></figure>
+<p>输入topic名字，我这里依次创建了思路里的三个topic。（'all_anime_tops'，'all_anime_genres_counts'，prediction_topics）</p>
+<p>接下来创建连接器（类型选elk）与elk链接以实现可视化：</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528124818.png" alt="" loading="lazy"></figure>
+<p>按照上图创建，注意ignore掉key和schema，一般来说是不建议这样的，但是不忽略会产生我无法解决的问题。</p>
+<h3 id="airflow相关">airflow相关</h3>
+<p>在创建composer（https://cloud.google.com/composer）的时候，可以进行选择:</p>
+<figure data-type="image" tabindex="7"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528113449.png" alt="" loading="lazy"></figure>
+<p>composer2我始终无法成功创建。故选择的是composer1.</p>
+<p>创建之后进入界面：</p>
+<figure data-type="image" tabindex="8"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528113634.png" alt="" loading="lazy"></figure>
+<p>首先我们需要安装一个额外的包，来保证airflow和kafka的通讯，点击pypi软件包，安装confluent-kafka。</p>
+<figure data-type="image" tabindex="9"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528113840.png" alt="" loading="lazy"></figure>
+<p>接下来打开DAG文件夹，我们的DAG文件就需要放入其中。</p>
+<figure data-type="image" tabindex="10"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528114132.png" alt="" loading="lazy"></figure>
+<p>这里我在DAG目录的上一级目录新建了一个文件夹，在里面存放了所有会用的东西（包括spark运行所需的jar包，spark安装后的初始化sh命令，spark链接kafka所需要的conf凭证，spark任务py文件，预训练好的模型），将这个gs储存桶当作了一个简易云盘使用。需要调用其中数据时，就可以通过：</p>
+<pre><code class="language-html">gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/file
+</code></pre>
+<p>调用。</p>
+<figure data-type="image" tabindex="11"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528115648.png" alt="" loading="lazy"></figure>
+<h3 id="spark相关">spark相关</h3>
+<p>这一部分时卡住我最久的部分，google dataproc的环境问题有点多。</p>
+<p>首先对于该集群的搭建，我使用了命令行的搭建方式。</p>
+<p>当我们启用了google dataproc后，我们来到其控制台界面：</p>
+<figure data-type="image" tabindex="12"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528115550.png" alt="" loading="lazy"></figure>
+<p>单击这里即可进入控制台。不过在此之前我们需要进行一些准备。</p>
+<p>首先建议使用的时20年的ubuntu环境，虽说不是最新的，但是个人认为比较稳定。</p>
+<p>使用vscode等IDE我们新建一个文件jaas.conf（kafka连接凭证）：</p>
+<pre><code class="language-java">KafkaClient {
+  org.apache.kafka.common.security.plain.PlainLoginModule required
+  username=&quot;4GLFTYVSO5V7MJ6B&quot;
+  password=&quot;71JNm1voEHT/NBq8BtAVVLfs8nhmnfcyxHJFCLZLwFPjOfJ9rJ0On4DNnMfun97c&quot;;
+};
+</code></pre>
+<p>这里填上你的kafka API key。</p>
+<p>再创建一个sh（copy_jaas.sh）来控制dataproc spark集群创建时需要完成的工作（导入kafka支持包，导入预训练好的模型，移动kafka链接凭证）</p>
+<pre><code class="language-sh">#!/bin/bash
+
+# 创建模型存储目录
+mkdir -p /home/model/
+
+# 下载模型到模型存储目录
+gsutil cp gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/decision_tree_model.pkl /home/model/
+gsutil cp gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/count_vectorizer.pkl /home/model/
+
+# 安装库
+/opt/conda/default/bin/pip install langdetect
+/opt/conda/default/bin/pip install confluent_kafka
+/opt/conda/default/bin/pip install requests
+/opt/conda/default/bin/pip install joblib
+/opt/conda/default/bin/pip install scikit-learn
+
+# 下载 jaas.conf 文件
+gsutil cp gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/jaas.conf /etc/
+</code></pre>
+<p>接下来回到dataproc集群，在终端输入：</p>
+<pre><code class="language-shell">gcloud dataproc clusters create cluster-biganime     --region us-west4     --zone us-west4-b     --single-node     --master-machine-type n2-standard-4     --master-boot-disk-size 500     --image-version 1.5-ubuntu18     --project biganime     --initialization-actions gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/copy_jaas.sh
+</code></pre>
+<p>回车创建一个新的集群。</p>
+<h3 id="dag内容">DAG内容</h3>
+<p>以下时DAG文件airflow_top50_test.py的内容：</p>
+<pre><code class="language-python">from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
+from airflow.contrib.operators.dataproc_operator import DataProcPySparkOperator
+from datetime import datetime, timedelta
+from requests.auth import HTTPBasicAuth
+import requests
+import json
+import time
+from confluent_kafka import SerializingProducer
+from confluent_kafka.serialization import StringSerializer
+
+def send_anime_top_to_kafka():
+    # 清空 Elasticsearch 索引
+    indices_to_delete = [&quot;all_anime_tops&quot;, &quot;all_anime_genres_counts&quot;]
+
+    for index in indices_to_delete:
+        response = requests.delete(
+            f'https://biganime.es.us-central1.gcp.cloud.es.io/{index}',
+            auth=HTTPBasicAuth('elastic', '8wt3nRsnx1IufleEMs8CIOYL')
+        )
+        if response.status_code == 200:
+            print(f&quot;Index {index} has been deleted successfully&quot;)
+        elif response.status_code == 404:
+            print(f&quot;Index {index} did not exist&quot;)
+        else:
+            print(f&quot;Error occurred while deleting index {index}&quot;)
+
+    producer_conf = {
+        'bootstrap.servers': 'pkc-6ojv2.us-west4.gcp.confluent.cloud:9092',
+        'security.protocol': 'SASL_SSL',
+        'sasl.mechanisms': 'PLAIN',
+        'sasl.username': '4GLFTYVSO5V7MJ6B',
+        'sasl.password': '71JNm1voEHT/NBq8BtAVVLfs8nhmnfcyxHJFCLZLwFPjOfJ9rJ0On4DNnMfun97c',
+        'key.serializer': StringSerializer('utf_8'),
+        'value.serializer': StringSerializer('utf_8')
+    }
+    producer = SerializingProducer(producer_conf)
+
+    for page in [1, 2]:
+        response = requests.get(f&quot;https://api.jikan.moe/v4/top/anime?page={page}&quot;)
+        top_anime = response.json()
+
+        for anime in top_anime['data']:
+            response = requests.get(f&quot;https://api.jikan.moe/v4/anime/{anime['mal_id']}&quot;)
+            anime_detail = response.json()
+
+            message_key = anime_detail['data']['title']
+            print(message_key)
+            message_value = {
+                &quot;title&quot;: message_key,
+                &quot;genres&quot;: [genre['name'] for genre in anime_detail['data']['genres']],
+                &quot;timestamp&quot;: int(time.time())  # 添加当前时间戳
+            }
+            message_value = json.dumps(message_value)
+
+            producer.produce(topic='all_anime_tops', key=message_key, value=message_value)
+
+            time.sleep(1)
+
+    producer.flush()
+
+# 创建 Airflow DAG
+default_args = {
+    'owner': 'airflow',
+    'start_date': datetime(2023, 5, 24),
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+dag = DAG(
+    'send_anime_top_to_kafka',
+    default_args=default_args,
+    description='A simple DAG to send anime top to Kafka',
+    #schedule_interval='0 7,14 * * *',  # Run at 7AM and 2PM every day
+    schedule_interval=None,  # No schedule, only run when manually triggered
+    catchup=False
+)
+
+t1 = PythonOperator(
+    task_id='send_anime_top_to_kafka',
+    python_callable=send_anime_top_to_kafka,
+    dag=dag,
+)
+
+pyspark_job1 = DataProcPySparkOperator(
+    task_id='run_pyspark_on_anime_top50_pyspark',
+    main='gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/anime_top50_pyspark.py',
+    dataproc_properties={
+        'spark.executor.extraJavaOptions': '-Djava.security.auth.login.config=/etc/jaas.conf',
+        'spark.driver.extraJavaOptions': '-Djava.security.auth.login.config=/etc/jaas.conf'
+    },
+    dataproc_jars=[
+        'gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/spark-sql-kafka-0-10_2.12-2.4.8.jar',
+        'gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/kafka-clients-0.10.2.2.jar'
+    ],
+    cluster_name='cluster-biganime',
+    region='us-west4',
+    project_id='biganime',
+    dag=dag
+)
+
+pyspark_job2 = DataProcPySparkOperator(
+    task_id='run_pyspark_on_anime_sentiment_prediction',
+    main='gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/anime_sentiment_prediction.py',
+    dataproc_properties={
+        'spark.executor.extraJavaOptions': '-Djava.security.auth.login.config=/etc/jaas.conf',
+        'spark.driver.extraJavaOptions': '-Djava.security.auth.login.config=/etc/jaas.conf'
+    },
+    dataproc_jars=[
+        'gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/spark-sql-kafka-0-10_2.12-2.4.8.jar',
+        'gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/kafka-clients-0.10.2.2.jar'
+    ],
+    cluster_name='cluster-biganime',
+    region='us-west4',
+    project_id='biganime',
+    dag=dag
+)
+
+t1 &gt;&gt; [pyspark_job1, pyspark_job2]  # 将 PySpark 任务添加到 DAG 中，并行执行
+
+</code></pre>
+<p>其中，kafka的bootstrap.servers可以在如下地方获取：</p>
+<figure data-type="image" tabindex="13"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528130615.png" alt="" loading="lazy"></figure>
+<p>另外，两个pyspark_job启动时所需要的jar包是需要对应spark版本自行下载并上传的。</p>
+<pre><code class="language-python">dag = DAG(
+    'send_anime_top_to_kafka',
+    default_args=default_args,
+    description='A simple DAG to send anime top to Kafka',
+    #schedule_interval='0 7,14 * * *',  # Run at 7AM and 2PM every day
+    schedule_interval=None,  # No schedule, only run when manually triggered
+    catchup=False
+)
+</code></pre>
+<p>这里我也设置的是DAG触发一次执行一次，而不是真正按照一天发送两次（方便测试）</p>
+<p>接下来是在spark上运行的两个py</p>
+<p>anime_top50_pyspark.py（完成了从kafka读取数据进行处理后再传回新的topic的过程）</p>
+<pre><code class="language-python">from pyspark.sql import SparkSession
+from pyspark.sql.functions import explode, split, from_json, col, trim
+from pyspark.sql.types import StructType, StructField, StringType, LongType  # 添加这行导入语句
+
+
+spark = SparkSession.builder.appName(&quot;KafkaToKafka&quot;).getOrCreate()
+
+# Define the schema of the input data
+schema = StructType([
+    StructField(&quot;title&quot;, StringType(), True),
+    StructField(&quot;genres&quot;, StringType(), True),
+    StructField(&quot;timestamp&quot;, LongType(), True)
+])
+
+# 从 Kafka 读取数据
+df = spark \
+  .readStream \
+  .format(&quot;kafka&quot;) \
+  .option(&quot;kafka.bootstrap.servers&quot;, &quot;pkc-6ojv2.us-west4.gcp.confluent.cloud:9092&quot;) \
+  .option(&quot;subscribe&quot;, &quot;all_anime_tops&quot;) \
+  .option(&quot;kafka.security.protocol&quot;, &quot;SASL_SSL&quot;) \
+  .option(&quot;kafka.sasl.mechanism&quot;, &quot;PLAIN&quot;) \
+  .option(&quot;kafka.sasl.username&quot;, &quot;4GLFTYVSO5V7MJ6B&quot;) \
+  .option(&quot;failOnDataLoss&quot;, False) \
+  .option(&quot;kafka.sasl.password&quot;, &quot;71JNm1voEHT/NBq8BtAVVLfs8nhmnfcyxHJFCLZLwFPjOfJ9rJ0On4DNnMfun97c&quot;) \
+  .load()
+
+
+# Extract the value of the messages and parse the JSON
+df = df.select(from_json(col(&quot;value&quot;).cast(&quot;string&quot;), schema).alias(&quot;data&quot;))
+
+# 处理 genres，去除两端的引号和空格
+genres_df = df.select(explode(split(df.data.genres, &quot;,&quot;)).alias(&quot;genre&quot;))
+genres_df = genres_df.withColumn(&quot;genre&quot;, trim(genres_df.genre))
+
+# 将结果转为 JSON 格式，其中每条记录包含 genre
+genres_df_json = genres_df.selectExpr(&quot;to_json(struct(*)) AS value&quot;)
+
+# 将结果写回 Kafka
+query = genres_df_json \
+  .writeStream \
+  .outputMode(&quot;update&quot;) \
+  .format(&quot;kafka&quot;) \
+  .option(&quot;kafka.bootstrap.servers&quot;, &quot;pkc-6ojv2.us-west4.gcp.confluent.cloud:9092&quot;) \
+  .option(&quot;topic&quot;, &quot;all_anime_genres_counts&quot;) \
+  .option(&quot;kafka.security.protocol&quot;, &quot;SASL_SSL&quot;) \
+  .option(&quot;kafka.sasl.mechanism&quot;, &quot;PLAIN&quot;) \
+  .option(&quot;kafka.sasl.username&quot;, &quot;4GLFTYVSO5V7MJ6B&quot;) \
+  .option(&quot;kafka.sasl.password&quot;, &quot;71JNm1voEHT/NBq8BtAVVLfs8nhmnfcyxHJFCLZLwFPjOfJ9rJ0On4DNnMfun97c&quot;) \
+  .option(&quot;checkpointLocation&quot;, &quot;gs://europe-west1-biganime-1990c8ad-bucket/checkpoints/&quot;) \
+  .start() 
+
+query.awaitTermination(1000)
+
+</code></pre>
+<p>anime_sentiment_prediction.py（完成了实时从kitsu上抓取数据并进行决策数分析的过程）</p>
+<pre><code class="language-python">from pyspark.sql import SparkSession
+from pyspark.sql.functions import udf, col
+from pyspark.sql.types import StringType
+from confluent_kafka import SerializingProducer
+from confluent_kafka.serialization import StringSerializer
+import requests
+import joblib
+import re
+from datetime import datetime
+import json  # Import json module
+
+# 函数：将ISO 8601格式的字符串转换为时间戳
+def get_timestamp_from_iso8601(iso8601_str):
+    date_time_obj = datetime.strptime(iso8601_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+    timestamp = datetime.timestamp(date_time_obj)
+    return str(timestamp)
+
+# 函数：清洗文本
+def clean_text(text):
+    text = re.sub(r&quot;[^\w\s]&quot;, &quot;&quot;, text)
+    text = re.sub(r&quot;\d+&quot;, &quot;&quot;, text)
+    text = text.lower()
+    return text
+
+# 函数：预测情绪
+def predict_sentiment(text):
+    text = clean_text(text)
+    vectorized_text = count_vectorizer.transform([text]).toarray()
+    prediction = decision_tree.predict(vectorized_text)[0]
+
+    word_count = len(text.split())
+    if word_count &lt; 10:
+        return &quot;0&quot;  # Mixed Feelings
+    elif word_count &gt; 20:
+        return &quot;-1&quot;  # Not Recommended
+    else:
+        if prediction == &quot;Recommended&quot;:
+            return &quot;1&quot;
+        else:
+            return &quot;0&quot;  # Mixed Feelings
+
+spark = SparkSession.builder.appName(&quot;AnimeSentimentPrediction&quot;).getOrCreate()
+
+# 加载决策树模型和 CountVectorizer
+#decision_tree = joblib.load(&quot;gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/decision_tree_model.pkl&quot;)
+#count_vectorizer = joblib.load(&quot;gs://europe-west1-biganime-1990c8ad-bucket/biganime_pyspark/count_vectorizer.pkl&quot;)
+decision_tree = joblib.load('/home/model/decision_tree_model.pkl')
+count_vectorizer = joblib.load('/home/model/count_vectorizer.pkl')
+
+# Kafka生产者配置
+producer_conf = {
+    'bootstrap.servers': 'pkc-6ojv2.us-west4.gcp.confluent.cloud:9092',
+    'security.protocol': 'SASL_SSL',
+    'sasl.mechanisms': 'PLAIN',
+    'sasl.username': '4GLFTYVSO5V7MJ6B',
+    'sasl.password': '71JNm1voEHT/NBq8BtAVVLfs8nhmnfcyxHJFCLZLwFPjOfJ9rJ0On4DNnMfun97c',
+    'key.serializer': StringSerializer('utf_8'),
+    'value.serializer': StringSerializer('utf_8')
+}
+producer = SerializingProducer(producer_conf)
+
+# Kitsu评论预测
+for i in range(3):
+    page_number = i + 1
+    url = f&quot;https://kitsu.io/api/edge/anime?sort=-user_count&amp;page[limit]=20&amp;page[offset]={i*20}&quot;
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        print('Error with status code:', response.status_code)
+        continue
+
+    data = response.json()['data']
+
+    for anime in data:
+        anime_id = anime['id']
+        url = f&quot;https://kitsu.io/api/edge/media-reactions?filter[animeId]={anime_id}&amp;page[limit]=5&quot;
+        response = requests.get(url)
+
+        if response.status_code != 200:
+            print(f&quot;Error with status code for Anime ID {anime_id}: {response.status_code}&quot;)
+            continue
+
+        reactions = response.json()['data']
+
+        # 对kitsu评论进行预测并将预测结果发送到Kafka
+        for reaction in reactions:
+            reaction_content = reaction['attributes']['reaction']
+            sentiment_prediction = predict_sentiment(reaction_content)  # directly call the function here
+            print(sentiment_prediction)
+
+            # 将updatedAt作为key
+            reaction_updatedAt = reaction['attributes']['updatedAt']
+            reaction_key = get_timestamp_from_iso8601(reaction_updatedAt)
+
+            # Create a JSON object that includes the key and value
+            sentiment_json = json.dumps({&quot;timestamp&quot;: reaction_key, &quot;sentiment&quot;: sentiment_prediction})
+            
+            # Send the JSON object to Kafka with a dummy key (or you can leave the key=None)
+            producer.produce(topic='prediction_topics', value=sentiment_json)  
+
+# Ensure all messages are sent
+producer.flush()
+</code></pre>
+<h3 id="可视化">可视化</h3>
+<p>一切准备就绪，我们回到composer（airflow）控制台，点击打开airflow界面：</p>
+<figure data-type="image" tabindex="14"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528133045.png" alt="" loading="lazy"></figure>
+<p>来到熟悉的界面，如果DAG编写没有问题，你就可以触发dag了。</p>
+<figure data-type="image" tabindex="15"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528133129.png" alt="" loading="lazy"></figure>
+<p>最终我们的三个topic都在elk平台上被消费后，会出现在这里：</p>
+<figure data-type="image" tabindex="16"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528133248.png" alt="" loading="lazy"></figure>
+<p>接下来就是创建dataview和使用dashboard进行可视化了。</p>
+<p>左边拉到底选择stack management，再选择dataview，我这里创建了两个data view：</p>
+<figure data-type="image" tabindex="17"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528133505.png" alt="" loading="lazy"></figure>
+<p>然后我们就可以去elk的dashboard进行可视化操作了。</p>
+<p>如果有实时的效果，要如下设置，refresh设置为1s：</p>
+<figure data-type="image" tabindex="18"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528133704.png" alt="" loading="lazy"></figure>
+<p>最后做一个展示：</p>
+<figure data-type="image" tabindex="19"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230528133813.png" alt="" loading="lazy"></figure>
+</div>
+          <!-- Share to Twitter, Weibo, Telegram -->
+          <div class="flex items-center">
+            <div class="mr-4 flex items-center">
+              <i class="ri-share-forward-line text-gray-500"></i>
+            </div>
+            <div
+              class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex"
+              @click="shareToTwitter">
+              <i class="ri-twitter-line"></i>
+            </div>
+            <div
+              class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex"
+              @click="shareToWeibo">
+              <i class="ri-weibo-line"></i>
+            </div>
+            <div
+              class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex"
+              @click="shareToTelegram">
+              <i class="ri-telegram-line"></i>
+            </div>
+          </div>
+        </div>
+
+         
+        <div id="vlaine-comment"></div>
+         <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+</footer>
+
+      </div>
+
+      <!-- TOC Container -->
+      <div
+        class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight"
+        @click="showToc = true">
+        <i class="ri-file-list-line"></i>
+      </div>
+
+      <div
+        class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast"
+        :class="{ '-mr-64': !showToc }">
+        <div class="flex mb-4 justify-end">
+          <div
+            class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast"
+            @click="showToc = false">
+            <i class="ri-close-line text-lg"></i>
+          </div>
+        </div>
+        <div class="post-toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E7%9A%84%E9%A2%84%E5%A4%84%E7%90%86%E4%B8%8E%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%AD%E7%BB%83">训练数据的预处理与模型的训练</a></li>
+<li><a href="#%E6%80%9D%E8%B7%AF%E6%80%BB%E7%BB%93">思路总结</a></li>
+<li><a href="#%E5%B9%B3%E5%8F%B0%E7%9A%84%E5%87%86%E5%A4%87%E4%B8%8E%E6%B3%A8%E5%86%8C">平台的准备与注册</a></li>
+<li><a href="#%E9%9C%80%E8%A6%81%E7%9A%84api-key%E8%8E%B7%E5%8F%96%E4%BB%A5%E5%8F%8Akafka-topic%E8%BF%9E%E6%8E%A5%E5%99%A8%E7%9A%84%E5%BB%BA%E7%AB%8B">需要的API key获取以及kafka topic，连接器的建立</a></li>
+<li><a href="#airflow%E7%9B%B8%E5%85%B3">airflow相关</a></li>
+<li><a href="#spark%E7%9B%B8%E5%85%B3">spark相关</a></li>
+<li><a href="#dag%E5%86%85%E5%AE%B9">DAG内容</a></li>
+<li><a href="#%E5%8F%AF%E8%A7%86%E5%8C%96">可视化</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+      </div>
+
+      <!-- Back to top -->
+      <div
+        class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200"
+        @click="backToUp"
+        v-show="scrolled">
+        <i class="ri-arrow-up-line"></i>
+      </div>
+    </div>
+
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe.
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg"></div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter"></div>
+        <button
+          class="pswp__button pswp__button--close"
+          title="Close (Esc)"></button>
+        <button
+          class="pswp__button pswp__button--fs"
+          title="Toggle fullscreen"></button>
+        <button
+          class="pswp__button pswp__button--zoom"
+          title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip"></div>
+      </div>
+      <button
+        class="pswp__button pswp__button--arrow--left"
+        title="Previous (arrow left)"></button>
+      <button
+        class="pswp__button pswp__button--arrow--right"
+        title="Next (arrow right)"></button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script src="https://fastly.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://gagumi.github.io/media/scripts/main.js"></script>
+
+    <!-- Code Highlight -->
+    
+    <script src="https://gagumi.github.io/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+    
+
+    <script src="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+    <script>
+      //拿到预览框架，也就是上面的html代码
+      var pswpElement = document.querySelectorAll('.pswp')[0]
+      //定义图片数组变量
+      var imgitems
+      /**
+       * 用于显示预览界面
+       * @param index 图片数组下标
+       */
+      function viewImg(index) {
+        //其它选项这里不做过多阐述，详情见官网
+        var pswpoptions = {
+          index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+          bgOpacity: 0.7, // 背景透明度，0-1
+          maxSpreadZoom: 3, // 缩放级别，不要太大
+        }
+        //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+        var gallery = new PhotoSwipe(
+          pswpElement,
+          PhotoSwipeUI_Default,
+          imgitems,
+          pswpoptions
+        )
+        gallery.init()
+      }
+      /**
+       * 用于添加图片点击事件
+       * @param img 图片元素
+       * @param index 所属下标（在imgitems中的位置）
+       */
+      function addImgClick(img, index) {
+        img.onclick = function () {
+          viewImg(index)
+        }
+      }
+      /**
+       * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+       * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+       * 异步加载图片可在图片元素创建完成后调用此方法
+       */
+      function initImg() {
+        //重置图片数组
+        imgitems = []
+        //查找class:markdown 下的所有img元素并遍历
+        var imgs = document.querySelectorAll('.markdown img')
+        for (var i = 0; i < imgs.length; i++) {
+          var img = imgs[i]
+          //本站相册初始为loading图片，真实图片放在data-src
+          var ds = img.getAttribute('data-src')
+          //创建image对象，用于获取图片宽高
+          var imgtemp = new Image()
+          //判断是否存在data-src
+          if (ds != null && ds.length > 0) {
+            imgtemp.src = ds
+          } else {
+            imgtemp.src = img.src
+          }
+          //判断是否存在缓存
+          if (imgtemp.complete) {
+            var imgobj = {
+              src: imgtemp.src,
+              w: imgtemp.width,
+              h: imgtemp.height,
+            }
+            imgitems[i] = imgobj
+            addImgClick(img, i)
+          } else {
+            console.log('进来了2')
+            imgtemp.index = i
+            imgtemp.img = img
+            imgtemp.onload = function () {
+              var imgobj = {
+                src: this.src,
+                w: this.width,
+                h: this.height,
+              }
+              //不要使用push，因为onload前后顺序会不同
+              imgitems[this.index] = imgobj
+              //添加点击事件
+              addImgClick(this.img, this.index)
+            }
+          }
+        }
+      }
+      //初始化
+      initImg()
+    </script>
+     <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'AxKJfVBXhXXWlO1ABZHQtcDx-MdYXbMMI',
+    appKey: 'BMP1hITDOIUE3osQxLR6EWXC',
+    pageSize: '10',
+    notify: 'true',
+    avatar: 'mp',
+    verify: 'true',
+    placeholder: '来都来了，不妨评论一下',
+    visitor: 'true',
+    highlight: 'true',
+    recordIP: 'true',
+  })
+</script>
+  
+  </body>
+</html>

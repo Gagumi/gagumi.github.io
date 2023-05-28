@@ -1,0 +1,730 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>数据池与大数据分析可视化综合应用的探索 -
+    Gagumi&#39;s blog</title>
+<link rel="shortcut icon" href="https://gagumi.github.io/favicon.ico" />
+<link
+  href="https://fastly.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css"
+  rel="stylesheet" />
+<link
+  rel="stylesheet"
+  href="https://fastly.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css" />
+<link
+  rel="stylesheet"
+  href="https://gagumi.github.io/media/css/tailwind.css" />
+<link rel="stylesheet" href="https://gagumi.github.io/styles/main.css" />
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  title="数据池与大数据分析可视化综合应用的探索 -
+    Gagumi&#39;s blog - Atom Feed"
+  href="https://gagumi.github.io/atom.xml" />
+
+
+
+    <meta name="description" content="学校的一个project，要求完成一整套的大数据流程。
+
+
+  对不起，你的浏览器不支持 audio 元素。
+
+
+前期思路
+决定做四个可视化：
+
+
+实时评分跟踪
+
+
+实时评论情绪分析
+
+
+各个类别的动漫在不同时间段的发布数量
+
+
+实时热度排..." />
+    <meta
+      property="og:title"
+      content="数据池与大数据分析可视化综合应用的探索 - Gagumi&#39;s blog" />
+    <meta property="og:description" content="学校的一个project，要求完成一整套的大数据流程。
+
+
+  对不起，你的浏览器不支持 audio 元素。
+
+
+前期思路
+决定做四个可视化：
+
+
+实时评分跟踪
+
+
+实时评论情绪分析
+
+
+各个类别的动漫在不同时间段的发布数量
+
+
+实时热度排..." />
+    <meta property="og:type" content="articles" />
+    <meta property="og:url" content="https://gagumi.github.io/post/shu-ju-chi-yu-da-shu-ju-fen-xi-ke-shi-hua-zong-he-ying-yong-de-tan-suo/" />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230523091315.png" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content="1200" />
+    <meta
+      name="twitter:title"
+      content="数据池与大数据分析可视化综合应用的探索 - Gagumi&#39;s blog" />
+    <meta name="twitter:description" content="学校的一个project，要求完成一整套的大数据流程。
+
+
+  对不起，你的浏览器不支持 audio 元素。
+
+
+前期思路
+决定做四个可视化：
+
+
+实时评分跟踪
+
+
+实时评论情绪分析
+
+
+各个类别的动漫在不同时间段的发布数量
+
+
+实时热度排..." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://gagumi.github.io/post/shu-ju-chi-yu-da-shu-ju-fen-xi-ke-shi-hua-zong-he-ying-yong-de-tan-suo/" />
+
+    <link
+      rel="stylesheet"
+      href="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css" />
+    <link
+      rel="stylesheet"
+      href="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css" />
+
+    
+    <link
+      rel="stylesheet"
+      href="https://gagumi.github.io/media/css/prism-synthwave84.css" />
+     
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" />
+    
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/Xalaok/Fonts@main/LXGWWenKaiLite/regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/Xalaok/Fonts@main/LXGWWenKaiLite/bold.woff2" as="font" type="font/woff2" crossorigin>
+  </head>
+
+  <body>
+    <div class="antialiased flex flex-col min-h-screen" id="app">
+      <a
+        href="https://gagumi.github.io"
+        class="fixed top-0 left-0 mt-4 bg-black text-white dark:text-gray-700 dark:bg-yellow-50 dark:hover:bg-black dark:hover:text-white inline-flex p-2 pl-8 hover:text-gray-700 hover:bg-yellow-50 font-bold z-10 transition-fast animated fadeInLeft">
+        Gagumi&#39;s blog
+      </a>
+      <div class="max-w-4xl w-full mx-auto">
+        <div
+          class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
+          <h1
+            class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
+            数据池与大数据分析可视化综合应用的探索
+          </h1>
+          
+          <img
+            src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230523091315.png"
+            alt="数据池与大数据分析可视化综合应用的探索"
+            class="block w-full mb-8" />
+          
+          <div class="mb-8 flex flex-wrap">
+            <div class="text-gray-400 text-sm mr-4">
+              2023-05-24 · 12 min read
+            </div>
+            
+            <a
+              href="https://gagumi.github.io/tag/oFLQRYHIn/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              python
+            </a>
+            
+            <a
+              href="https://gagumi.github.io/tag/-iTzgZm-A/"
+              class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
+              <i class="ri-hashtag"></i>
+              博客
+            </a>
+            
+          </div>
+          <div class="markdown mb-8" v-pre><p style="font-size:20px;">学校的一个project，要求完成一整套的大数据流程。
+</p>
+<audio controls src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/audio/HOYO-MiX%20_%20Anthony%20Lynch%20-%20%E8%B8%8F%E4%B8%8A%E6%97%85%E9%80%94%20Take%20the%20Journey.flac" type="audio/flac" volume="0.3" loop>
+  对不起，你的浏览器不支持 audio 元素。
+</audio>
+<!-- more -->
+<h3 id="前期思路">前期思路</h3>
+<p>决定做四个可视化：</p>
+<ul>
+<li>
+<p>实时评分跟踪</p>
+</li>
+<li>
+<p>实时评论情绪分析</p>
+</li>
+<li>
+<p>各个类别的动漫在不同时间段的发布数量</p>
+</li>
+<li>
+<p>实时热度排行</p>
+</li>
+</ul>
+<p>大致思路为：</p>
+<ul>
+<li>数据准备：</li>
+</ul>
+<p>探索MyAnimeList API和Kitsu API</p>
+<ul>
+<li>
+<p>数据收集：</p>
+<p>创建一个 Airflow 任务来定期调用 MyAnimeList API 和 Kitsu API，获取动漫数据。这个任务可能需要一个 Python 脚本来调用 API，并处理返回的数据。<br>
+将获取的数据发送到 Kafka 中。这可以通过 Kafka 的 Python 客户端库完成，例如 Confluent Kafka Python。</p>
+</li>
+<li>
+<p>实时数据处理：</p>
+<p>创建一个 Airflow 任务来启动 Spark Streaming 作业，从 Kafka 中读取数据，并进行实时数据处理。这个 Spark Streaming 作业需要进行一些数据清洗和预处理步骤，例如去除无效的数据，或者转换数据的格式。</p>
+</li>
+<li>
+<p>数据转换：</p>
+<p>创建一个 Airflow 任务来启动 Spark 作业，进行数据转换。</p>
+<p>这个 Spark 作业需要将数据转换为 Parquet 格式，或者将日期字段转换为 UTC 格式。</p>
+</li>
+<li>
+<p>情绪分析：</p>
+<p>创建一个 Airflow 任务来启动 Spark MLlib 作业，进行情绪分析。</p>
+<p>这个任务可能需要使用一个预训练的模型，或者自己的模型，对用户评论进行情绪分析。</p>
+</li>
+<li>
+<p>数据存储：</p>
+<p>创建一个 Airflow 任务来将处理后的数据存储在 Elasticsearch 中。</p>
+<p>需要创建一个 Elasticsearch 索引来存储数据。使用 Elasticsearch 的 Python 客户端库，例如 elasticsearch-py，来进行这个操作。</p>
+</li>
+<li>
+<p>数据可视化：</p>
+<p>在 Grafana 中创建一个或多个仪表盘来展示你的数据。这一步可能不需要在 Airflow 中进行，需要定期更新你的 Grafana 仪表盘。</p>
+</li>
+<li>
+<p>数据分析：</p>
+<p>根据需求和可视化结果，创建三个 Airflow 任务来启动 Spark  作业，进行进一步的数据分析（实时评分跟踪，各个类别的动漫在不同时间段的发布数量，实时热度排行）。</p>
+</li>
+</ul>
+<h3 id="期望返回数据">期望返回数据</h3>
+<ol>
+<li>
+<p><strong>动漫基础信息</strong>：这可能包括动漫的名称，描述，类别（例如，是电视剧、电影还是OVA），年份，季度，制作公司，导演等。</p>
+</li>
+<li>
+<p><strong>用户评分</strong>：用户对动漫的评分通常是重要的分析指标。可能需要了解评分的范围（例如，是1-5，还是1-10），以及评分是如何计算的（例如，是平均评分，还是中位数评分）。</p>
+</li>
+<li>
+<p><strong>用户评论</strong>：用户的文字评论可以用于情绪分析。注意，可能需要额外的数据处理步骤，例如文本清洗和预处理。</p>
+</li>
+<li>
+<p><strong>动漫的观看数量或热度</strong>：这可能由某种指标表示，例如用户观看的次数，或者用户对动漫的喜欢程度</p>
+</li>
+<li>
+<p><strong>时间戳</strong>：这是实时分析所必需的。时间戳可以帮助了解评论或评分是何时被提交的。</p>
+</li>
+</ol>
+<h3 id="api探索myanimelist-api">API探索：MyAnimeList API</h3>
+<p>查看 MyAnimeList 官方文档，发现其返回功能较少。这里决定采用https://api.jikan.moe/v4 API代为抓取信息。</p>
+<figure data-type="image" tabindex="1"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230523100244.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230525175011.png" alt="" loading="lazy"></figure>
+<p>在其中浏览，发现以上两个GET的返回值能够完成我们的预期任务。决定以狂赌之渊（ID：34933 姐姐踩我）为例，进行API探索。<br>
+考虑到访问限制，预期只返回前五条评论。先做一个简单的尝试。</p>
+<pre><code class="language-python">import requests
+
+def get_anime_info_and_top_reviews(anime_id, review_count=5):
+    # Define the base URL for the Jikan API
+    base_url = &quot;https://api.jikan.moe/v4&quot;
+
+    # Create the URLs for the specific anime and its reviews
+    anime_url = f&quot;{base_url}/anime/{anime_id}/full&quot;
+    review_url = f&quot;{base_url}/anime/{anime_id}/reviews&quot;
+
+    # Send a GET request to the Jikan API for the anime info
+    anime_response = requests.get(anime_url)
+
+    # If the GET request is successful, the status code will be 200
+    if anime_response.status_code == 200:
+        # Get the JSON data from the response
+        anime_data = anime_response.json()
+
+        # Access the 'data' field in the response
+        anime_info = anime_data[&quot;data&quot;]
+
+        # Print the title, type, airing dates, score, and popularity of the anime
+        print(f&quot;Title: {anime_info['title']}&quot;)
+        print(f&quot;Type: {anime_info['type']}&quot;)
+        print(f&quot;Aired: {anime_info['aired']}&quot;)
+        print(f&quot;Score: {anime_info['score']}&quot;)
+        print(f&quot;Popularity: {anime_info['popularity']}&quot;)
+
+    # Send a GET request to the Jikan API for the anime reviews
+    review_response = requests.get(review_url)
+
+    # If the GET request is successful, the status code will be 200
+    if review_response.status_code == 200:
+        # Get the JSON data from the response
+        review_data = review_response.json()
+
+        # Access the 'data' field in the response
+        reviews = review_data[&quot;data&quot;]
+
+        # Limit the number of reviews to the specified review count
+        reviews = reviews[:review_count]
+
+        # Iterate over each review
+        for review in reviews:
+            # Print the username of the reviewer and the review text
+            print(f&quot;\nUsername: {review['user']['username']}&quot;)
+            print(f&quot;Review: {review['review']}&quot;)
+            print(f&quot;Score: {review['score']}&quot;)
+            print(f&quot;Date: {review['date']}&quot;)
+
+# Test the function with the anime ID for Kakegurui (ID 34933)
+get_anime_info_and_top_reviews(34933)
+
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230523100939.png" alt="" loading="lazy"></figure>
+<p>我所需要的动漫信息的返回非常成功，接下来是评论，确实输出了评论的前五条（Jikan API 的 &quot;/reviews&quot; 端点返回的评论是按照某种方式排序的，虽然具体的排序规则在 API 文档中并未明确说明，离谱），尝试多次请求返回结果相同。</p>
+<h3 id="有关myanimelist的思考">有关MyAnimeList的思考</h3>
+<p>由于其top榜单更新时间为每两天更新一次，且没有历史数据，导致只能实现定期收集top榜单数据，评论数据。</p>
+<p>那么我们的目标就演变成：</p>
+<ul>
+<li><strong>实时搜索你想要的番剧</strong>，返回其封面，Ranked ，Popularity，简介以及对最近五条评论进行情感分析。</li>
+<li><strong>实时显示当前最受欢迎的动画</strong>，展示其封面，Ranked ，Popularity，简介以及对最近五条评论进行情感分析。</li>
+<li><strong>动画类型的分布</strong>：可以统计库中所有动画的类型（如动作、冒险、悬疑等），并通过饼状图或条形图来显示各类型动画的分布。（通过选择时间段来进行改变）</li>
+<li><strong>动画播放时段</strong>：分析和展示动画的播放时段，比如哪个季度或哪个月份播放的动画数量最多（通过选择季度）。</li>
+<li>实时功能实现：每天获取两次TOP50榜单。</li>
+<li>实时功能实现：定期地（例如每天或每小时）获取TOP50的最新评论，并将它们存储在自己的数据库中，附带获取评论的日期。然后，可以在数据库中查询特定时间段的评论。在 MyAnimeList 的评论数据中，<code>mal_id</code>字段是每条评论的唯一标识符。可以使用这个字段来检查新获取的评论是否已经在数据库中。</li>
+</ul>
+<h3 id="关于所有动画">关于所有动画</h3>
+<p>TMD，由于Jikan API并不允许获取所有动画，所以只能使用<code>top</code>端点来获取前50名的动画，并从中提取类型信息。进行尝试。</p>
+<p>这里需要注意，其TOP请求的参数如下例子：</p>
+<pre><code class="language-python">params = {
+    'type': 'tv',
+    'filter': 'airing',
+    'page': 1,
+    'limit': 50
+}
+</code></pre>
+<p>那么估计其请求应该为https://api.jikan.moe/v4/anime?filter=bypopularity&amp;page=1&amp;limit=50</p>
+<p>拿到了结果，此时再通过每个动漫的mal_id来查找并获取资源</p>
+<pre><code class="language-python">import time
+import requests
+from collections import defaultdict
+import matplotlib.pyplot as plt
+
+# 创建一个默认字典来存储每个类型的数量
+genre_counts = defaultdict(int)
+
+# 获取前50名的动画
+response = requests.get(&quot;https://api.jikan.moe/v4/anime?filter=bypopularity&amp;page=1&amp;limit=50&quot;)
+top_50_anime = response.json()
+
+for anime in top_50_anime['data']:
+    # 对每个动画发送一个请求，获取其详细信息
+    response = requests.get(f&quot;https://api.jikan.moe/v4/anime/{anime['mal_id']}&quot;)
+    anime_detail = response.json()
+
+    # 遍历动画的所有类型，增加计数
+    for genre in anime_detail['data']['genres']:
+        genre_counts[genre['name']] += 1
+
+    # 休眠1秒，以避免发送过多的请求
+    time.sleep(1)
+
+# 打印每个类型的数量
+for genre, count in genre_counts.items():
+    print(f&quot;{genre}: {count}&quot;)
+
+# 准备数据
+genres = list(genre_counts.keys())
+counts = list(genre_counts.values())
+
+# 创建条形图
+plt.figure(figsize=(10,6))
+plt.barh(genres, counts, color='skyblue')  # 使用水平条形图 barh，方便标签的显示
+
+# 设置标题和标签
+plt.title('Genre Distribution of Top 50 Anime')
+plt.xlabel('Count')
+plt.ylabel('Genre')
+
+# 显示图表
+plt.show()
+</code></pre>
+<p>其结果如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/image-20230523125808624.png" alt="" loading="lazy"></figure>
+<p>这样的结果与主页显示的内容相悖，需要重新选择url来发送请求。</p>
+<p>https://api.jikan.moe/v4/top/anime?page=1<br>
+虽然在官网上看起来一页有50个动漫，但是，经过观察返回值，可以发现，一页其实是25个动漫，那么，我们还需要遍历1 ，2。</p>
+<pre><code class="language-python">import time
+import requests
+from collections import defaultdict
+import matplotlib.pyplot as plt
+
+# 创建一个默认字典来存储每个类型的数量
+genre_counts = defaultdict(int)
+
+# 获取前50名的动画，通过两次循环获取第1页和第2页的数据
+for page in [1, 2]:
+    response = requests.get(f&quot;https://api.jikan.moe/v4/top/anime?page={page}&quot;)
+    top_anime = response.json()
+
+    for anime in top_anime['data']:
+        # 对每个动画发送一个请求，获取其详细信息
+        response = requests.get(f&quot;https://api.jikan.moe/v4/anime/{anime['mal_id']}&quot;)
+        anime_detail = response.json()
+
+        # 打印动画的名字
+        print(f&quot;Anime name: {anime_detail['data']['title']}&quot;)
+
+        # 遍历动画的所有类型，增加计数
+        for genre in anime_detail['data']['genres']:
+            genre_counts[genre['name']] += 1
+
+        # 休眠1秒，以避免发送过多的请求
+        time.sleep(1)
+
+# 打印每个类型的数量
+for genre, count in genre_counts.items():
+    print(f&quot;{genre}: {count}&quot;)
+
+# 准备数据
+genres = list(genre_counts.keys())
+counts = list(genre_counts.values())
+
+# 创建条形图
+plt.figure(figsize=(10,6))
+plt.barh(genres, counts, color='skyblue')  # 使用水平条形图 barh，方便标签的显示
+
+# 设置标题和标签
+plt.title('Genre Distribution of Top 50 Anime')
+plt.xlabel('Count')
+plt.ylabel('Genre')
+
+# 显示图表
+plt.show()
+</code></pre>
+<p>结果正常</p>
+<figure data-type="image" tabindex="5"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230523131848.png" alt="" loading="lazy"></figure>
+<p>下面是统计图：</p>
+<figure data-type="image" tabindex="6"><img src="https://raw.githubusercontent.com/Gagumi/MyPicGo/main/img/20230523132046.png" alt="" loading="lazy"></figure>
+<h4 id="通过seson抓取动画名称等内容2006-2023">通过seson抓取动画名称等内容（2006-2023）</h4>
+<p>将项目迁移到colab上，期望输出&quot;Year&quot;, &quot;Season&quot;, &quot;Anime Name&quot;, &quot;Score&quot;, &quot;MAL ID&quot;，进行试运行的时候出现问题，很多老日漫没有英文名字。</p>
+<p>一开始使用罗马音翻译，出现问题且表意可能不准确，于是使用translation库，如果没有英文标题，将其翻译为日语。</p>
+<p>顺便将得到的结果存入csv中。</p>
+<pre><code class="language-python">import csv
+import requests
+import time
+from translate import Translator
+
+translator = Translator(from_lang='ja', to_lang='en')
+
+years = range(2006, 2024)
+seasons = ['winter', 'spring', 'summer', 'fall']
+anime_data = []
+
+for year in years:
+    for season in seasons:
+        response = requests.get(f&quot;https://api.jikan.moe/v4/seasons/{year}/{season}&quot;)
+        data = response.json()
+        last_page = data['pagination']['last_visible_page']
+        for page in range(1, last_page + 1):
+            response = requests.get(f&quot;https://api.jikan.moe/v4/seasons/{year}/{season}?page={page}&quot;)
+            data = response.json()
+            for anime in data['data']:
+                anime_name = None
+                anime_id = anime['mal_id']
+                for title_info in anime['titles']:
+                    if title_info['type'] == 'English':
+                        anime_name = title_info['title']
+                        break
+                if anime_name is None:
+                    # English title is missing, use translation
+                    japanese_title = anime['title_japanese']
+                    anime_name = translator.translate(japanese_title)
+                anime_score = anime['score']
+                print(f&quot;Year: {year}, Anime: {anime_name}, MAL ID: {anime_id}&quot;)
+                anime_data.append([year, season, anime_name, anime_score, anime_id])
+            time.sleep(1)
+
+with open('anime_seasons.csv', 'w', newline='', encoding='utf-8') as file:
+    writer = csv.writer(file)
+    writer.writerow([&quot;Year&quot;, &quot;Season&quot;, &quot;Anime Name&quot;, &quot;Score&quot;, &quot;MAL ID&quot;])
+    writer.writerows(anime_data)
+</code></pre>
+<p>抓取结果较差，有几率出现空的返回值。<br>
+放弃翻译，没有英文标题的直接记录日语标题。</p>
+<p>抓下来数据之后，准备工作完成。</p>
+</div>
+          <!-- Share to Twitter, Weibo, Telegram -->
+          <div class="flex items-center">
+            <div class="mr-4 flex items-center">
+              <i class="ri-share-forward-line text-gray-500"></i>
+            </div>
+            <div
+              class="px-4 cursor-pointer text-blue-500 hover:bg-blue-100 dark:hover:bg-gray-600 inline-flex"
+              @click="shareToTwitter">
+              <i class="ri-twitter-line"></i>
+            </div>
+            <div
+              class="px-4 cursor-pointer text-red-500 hover:bg-red-100 dark:hover:bg-gray-600 inline-flex"
+              @click="shareToWeibo">
+              <i class="ri-weibo-line"></i>
+            </div>
+            <div
+              class="px-4 cursor-pointer text-indigo-500 hover:bg-indigo-100 dark:hover:bg-gray-600 inline-flex"
+              @click="shareToTelegram">
+              <i class="ri-telegram-line"></i>
+            </div>
+          </div>
+        </div>
+
+         
+        <div id="vlaine-comment"></div>
+         <footer class="py-12 text-center px-4 md:px-0" v-pre>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+</footer>
+
+      </div>
+
+      <!-- TOC Container -->
+      <div
+        class="fixed right-0 bottom-0 mb-16 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white dark:bg-gray-500 dark:text-gray-200 hover:shadow-lg transition-all animated fadeInRight"
+        @click="showToc = true">
+        <i class="ri-file-list-line"></i>
+      </div>
+
+      <div
+        class="fixed right-0 top-0 bottom-0 overflow-y-auto w-64 bg-white dark:bg-gray-800 p-4 border-l border-gray-100 dark:border-gray-600 z-10 transition-fast"
+        :class="{ '-mr-64': !showToc }">
+        <div class="flex mb-4 justify-end">
+          <div
+            class="w-8 h-8 inline-flex justify-center items-center rounded-full cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-fast"
+            @click="showToc = false">
+            <i class="ri-close-line text-lg"></i>
+          </div>
+        </div>
+        <div class="post-toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%89%8D%E6%9C%9F%E6%80%9D%E8%B7%AF">前期思路</a></li>
+<li><a href="#%E6%9C%9F%E6%9C%9B%E8%BF%94%E5%9B%9E%E6%95%B0%E6%8D%AE">期望返回数据</a></li>
+<li><a href="#api%E6%8E%A2%E7%B4%A2myanimelist-api">API探索：MyAnimeList API</a></li>
+<li><a href="#%E6%9C%89%E5%85%B3myanimelist%E7%9A%84%E6%80%9D%E8%80%83">有关MyAnimeList的思考</a></li>
+<li><a href="#%E5%85%B3%E4%BA%8E%E6%89%80%E6%9C%89%E5%8A%A8%E7%94%BB">关于所有动画</a>
+<ul>
+<li><a href="#%E9%80%9A%E8%BF%87seson%E6%8A%93%E5%8F%96%E5%8A%A8%E7%94%BB%E5%90%8D%E7%A7%B0%E7%AD%89%E5%86%85%E5%AE%B92006-2023">通过seson抓取动画名称等内容（2006-2023）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+      </div>
+
+      <!-- Back to top -->
+      <div
+        class="fixed right-0 bottom-0 mb-4 mr-4 shadow w-8 h-8 rounded-full flex justify-center items-center z-10 cursor-pointer bg-white hover:shadow-lg transition-all dark:bg-gray-500 dark:text-gray-200"
+        @click="backToUp"
+        v-show="scrolled">
+        <i class="ri-arrow-up-line"></i>
+      </div>
+    </div>
+
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <!-- Background of PhotoSwipe.
+        It's a separate element as animating opacity is faster than rgba(). -->
+  <div class="pswp__bg"></div>
+  <!-- Slides wrapper with overflow:hidden. -->
+  <div class="pswp__scroll-wrap">
+    <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <!--  Controls are self-explanatory. Order can be changed. -->
+        <div class="pswp__counter"></div>
+        <button
+          class="pswp__button pswp__button--close"
+          title="Close (Esc)"></button>
+        <button
+          class="pswp__button pswp__button--fs"
+          title="Toggle fullscreen"></button>
+        <button
+          class="pswp__button pswp__button--zoom"
+          title="Zoom in/out"></button>
+        <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+        <!-- element will get class pswp__preloader--active when preloader is running -->
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip"></div>
+      </div>
+      <button
+        class="pswp__button pswp__button--arrow--left"
+        title="Previous (arrow left)"></button>
+      <button
+        class="pswp__button pswp__button--arrow--right"
+        title="Next (arrow right)"></button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script src="https://fastly.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://gagumi.github.io/media/scripts/main.js"></script>
+
+    <!-- Code Highlight -->
+    
+    <script src="https://gagumi.github.io/media/prism.js"></script>
+    <script>
+      Prism.highlightAll()
+    </script>
+    
+
+    <script src="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+    <script src="https://fastly.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+    <script>
+      //拿到预览框架，也就是上面的html代码
+      var pswpElement = document.querySelectorAll('.pswp')[0]
+      //定义图片数组变量
+      var imgitems
+      /**
+       * 用于显示预览界面
+       * @param index 图片数组下标
+       */
+      function viewImg(index) {
+        //其它选项这里不做过多阐述，详情见官网
+        var pswpoptions = {
+          index: parseInt(index, 10), // 开始幻灯片索引。0是第一张幻灯片。必须是整数，而不是字符串。
+          bgOpacity: 0.7, // 背景透明度，0-1
+          maxSpreadZoom: 3, // 缩放级别，不要太大
+        }
+        //初始化并打开PhotoSwipe，pswpElement对应上面预览框架，PhotoSwipeUI_Default为皮肤，imgitems为图片数组，pswpoptions为选项
+        var gallery = new PhotoSwipe(
+          pswpElement,
+          PhotoSwipeUI_Default,
+          imgitems,
+          pswpoptions
+        )
+        gallery.init()
+      }
+      /**
+       * 用于添加图片点击事件
+       * @param img 图片元素
+       * @param index 所属下标（在imgitems中的位置）
+       */
+      function addImgClick(img, index) {
+        img.onclick = function () {
+          viewImg(index)
+        }
+      }
+      /**
+       * 轮询所有图片，获取src、width、height等数据，加入imgitems，并给图片元素添加事件
+       * 最好在onload中执行该方法，本站因放在最底部，所以直接初始化
+       * 异步加载图片可在图片元素创建完成后调用此方法
+       */
+      function initImg() {
+        //重置图片数组
+        imgitems = []
+        //查找class:markdown 下的所有img元素并遍历
+        var imgs = document.querySelectorAll('.markdown img')
+        for (var i = 0; i < imgs.length; i++) {
+          var img = imgs[i]
+          //本站相册初始为loading图片，真实图片放在data-src
+          var ds = img.getAttribute('data-src')
+          //创建image对象，用于获取图片宽高
+          var imgtemp = new Image()
+          //判断是否存在data-src
+          if (ds != null && ds.length > 0) {
+            imgtemp.src = ds
+          } else {
+            imgtemp.src = img.src
+          }
+          //判断是否存在缓存
+          if (imgtemp.complete) {
+            var imgobj = {
+              src: imgtemp.src,
+              w: imgtemp.width,
+              h: imgtemp.height,
+            }
+            imgitems[i] = imgobj
+            addImgClick(img, i)
+          } else {
+            console.log('进来了2')
+            imgtemp.index = i
+            imgtemp.img = img
+            imgtemp.onload = function () {
+              var imgobj = {
+                src: this.src,
+                w: this.width,
+                h: this.height,
+              }
+              //不要使用push，因为onload前后顺序会不同
+              imgitems[this.index] = imgobj
+              //添加点击事件
+              addImgClick(this.img, this.index)
+            }
+          }
+        }
+      }
+      //初始化
+      initImg()
+    </script>
+     <script type="application/javascript" src="https://unpkg.com/valine"></script>
+<script type="application/javascript">
+  new Valine({
+    el: '#vlaine-comment',
+    appId: 'AxKJfVBXhXXWlO1ABZHQtcDx-MdYXbMMI',
+    appKey: 'BMP1hITDOIUE3osQxLR6EWXC',
+    pageSize: '10',
+    notify: 'true',
+    avatar: 'mp',
+    verify: 'true',
+    placeholder: '来都来了，不妨评论一下',
+    visitor: 'true',
+    highlight: 'true',
+    recordIP: 'true',
+  })
+</script>
+  
+  </body>
+</html>
